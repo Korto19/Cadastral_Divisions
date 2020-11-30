@@ -21,7 +21,7 @@ repository=https://github.com/Korto19/Plugin_Frazionamenti
 
 hasProcessingProvider=yes
 # Uncomment the following line and add your changelog:
-# changelog=
+changelog= 30.11.2020 - first plugin release
 
 # Tags are comma separated with spaces allowed
 tags=python
