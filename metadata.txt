@@ -21,8 +21,7 @@ repository=https://github.com/Korto19/Cadastral_Divisions
 
 hasProcessingProvider=yes
 # Uncomment the following line and add your changelog:
-# changelog=
-
+changelog= migration from Frazionamenti processing
 # Tags are comma separated with spaces allowed
 tags=python
 
