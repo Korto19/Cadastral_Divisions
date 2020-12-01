@@ -13,8 +13,8 @@ email=giulio.fattori@tin.it
 about=Divide un mappale (poligono) secondo una linea direttrice
       Divide a parcel (polygon) by a line
 
-tracker=https://github.com/Korto19/Plugin_Frazionamenti/issues
-repository=https://github.com/Korto19/Plugin_Frazionamenti
+tracker=https://github.com/Korto19/Cadastral_Divisions/issues
+repository=https://github.com/Korto19/Cadastral_Divisions
 # End of mandatory metadata
 
 # Recommended items:
@@ -26,7 +26,7 @@ hasProcessingProvider=yes
 # Tags are comma separated with spaces allowed
 tags=python
 
-homepage=https://github.com/Korto19/Plugin_Frazionamenti#frazionamenti
+homepage=https://github.com/Korto19/Cadastral_Divisions#frazionamenti
 category=Processing, script
 icon=icon.png
 # experimental flag
