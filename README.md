@@ -1,4 +1,4 @@
-# Frazionamenti
+# Frazionamenti (Cadastral divisions)
 
 ## PROCESSING PER FRAZIONAMENTI
 Il frazionamento (catastale) è una procedura con la quale si mira a dividere in più unità un terreno in generale quindi una particella catastale.

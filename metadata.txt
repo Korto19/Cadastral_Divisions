@@ -3,15 +3,15 @@
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=Frazionamenti
+name=Cadastral Divisions
 qgisMinimumVersion=3.0
-description=Frazionamenti
+description=Divide parcel by line
 version=1.0
 author=Giulio Fattori
 email=giulio.fattori@tin.it
 
-about=Divide un poligono secondo una linea
-      Divide a polybon by a line
+about=Divide un mappale (poligono) secondo una linea direttrice
+      Divide a parcel (polygon) by a line
 
 tracker=https://github.com/Korto19/Plugin_Frazionamenti/issues
 repository=https://github.com/Korto19/Plugin_Frazionamenti
@@ -21,7 +21,7 @@ repository=https://github.com/Korto19/Plugin_Frazionamenti
 
 hasProcessingProvider=yes
 # Uncomment the following line and add your changelog:
-changelog= 30.11.2020 - first plugin release
+# changelog=
 
 # Tags are comma separated with spaces allowed
 tags=python
@@ -45,4 +45,3 @@ Category of the plugin: Raster, Vector, Database or Web
 
 # If the plugin can run on QGIS Server.
 server=False
-
