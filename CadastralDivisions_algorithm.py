@@ -127,7 +127,7 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
         Produce un nuovo layer denominato 'Fraz_' seguito da data e ora\n\
         <mark style='color:blue'><strong>PARAMETRI</strong></mark>\n\
         - layer poligonale contenente elementi da frazionare\n\
-        - layer lineare    contenente la dividente\n\
+        - layer lineare LINESTRING contenente UNA RETTA dividente\n\
         - n numero parti o un ennesimo da ottenere\n\
         \n- [opz] taglio lungo linea posizionata manualmente \
         \n- [opz] frazionamento in n parti eguali\
