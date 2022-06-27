@@ -17,7 +17,7 @@ Descrizione parametri:
 
 
 1. [**richiesto**] layer poligonale su cui scegliere la/e particelle da frazionare
-2. [**richiesto**]  layer linea su cui disegnare la linea di taglio desiderata
+2. [**richiesto**]  layer lineare LINESTRING su cui disegnare UNA RETTA di taglio desiderata
 3. [**richiesto** alternativo a 4] Denominatore della frazione di superficie da ottenere (ad esempio 1/3) o in alternativa il numero di parti eguali in cui dividere la particella/poligono
 4. [**richiesto** alternativo a 3] In alternativa al numero di parti è possibile specificare l’area che si vuole ottenere come area di risultato. 
 L’inserimento di una superficie target fa ignorare il parametro del punto 3
