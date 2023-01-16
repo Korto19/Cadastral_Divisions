@@ -5,13 +5,14 @@
 [general]
 name=Cadastral Divisions
 qgisMinimumVersion=3.0
-description=Divide parcel by line
-version=1.0
+description=Split a polygon (parcel) according to a line into n equal parts or by imposed area size
+description[it]=Divide un poligono (mappale) secondo una linea in n parti uguali o per area imposta
+version=1.1
 author=Giulio Fattori
 email=giulio.fattori@tin.it
 
-about=Divide un mappale (poligono) secondo una linea direttrice
-      Divide a parcel (polygon) by a line
+about=Split a polygon (parcel) according to a line into n equal parts or by an imposed area size, generating a new layer
+about[it]=Divide un poligono (mappale) secondo una linea in n parti uguali o per superficie imposta generando un nuovo layer
 
 tracker=https://github.com/Korto19/Cadastral_Divisions/issues
 repository=https://github.com/Korto19/Cadastral_Divisions
@@ -21,9 +22,11 @@ repository=https://github.com/Korto19/Cadastral_Divisions
 
 hasProcessingProvider=yes
 # Uncomment the following line and add your changelog:
-changelog= migration from Frazionamenti processing
+changelog=  1.0 migration from Frazionamenti processing
+            1.2 added translation and link to documentation
+
 # Tags are comma separated with spaces allowed
-tags=python
+tags=python,polygon,split,catasto,cadastre,cadastral,Referencia Catastral,Cadastral Parcel,frazionamenti,mappali,catastali,particelle,dividere,divide,dividi,parcel
 
 homepage=https://github.com/Korto19/Cadastral_Divisions#frazionamenti-cadastral-divisions
 category=Processing, script

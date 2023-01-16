@@ -52,6 +52,100 @@ import sys
 import os
 import inspect
 from qgis.PyQt.QtGui import QIcon
+cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+
+#questo per la traduzione
+from qgis.PyQt.QtCore import QSettings
+settings = QSettings()
+if settings.value('locale/userLocale')[0:2] == 'it':
+    Help_0 = "Fraziona il poligono interessato in parti in funzione di una linea<br>\
+        Produce un nuovo layer denominato 'Fraz_' seguito da data e ora\n\
+        <h3 style='color:blue'>Parametri</h3>\
+        <ul>\
+        <li>vettore poligonale contenente gli <b>elementi da frazionare</b></li>\
+        <li>vettore lineare contenente la <b>linea dividente</b></li>\
+        <li><b>denominatore frazione o numero parti uguali <font color='green'>[opz 2]</font></b></li>\
+        </ul>\
+        <h3 style='color:green'>Opzioni</h3>\
+        <ol>\
+        <li>taglio con linea posizionata manualmente</li>\
+        <li>frazionamento in n parti eguali</li>\
+        <li>superficie da ottenere (in alternativa alla parte/i)</li>\
+        <li>inversione ordine delle parti</li>\
+        </ol>\
+        <h4 style='color:red'>RISULTATO IMPREVEDIBILE PER POLIGONI CONCAVI</h4>\n\
+        <h4 style='color:black'>Per ulteriori informazioni</h4>\
+        <h5 style='color:blue'><a href='https://github.com/Korto19/Cadastral_Divisions#frazionamenti-cadastral-divisions'>https://github.com/Korto19/Cadastral_Divisions#frazionamenti-cadastral-divisions</a></h5>"
+    desc_0 = 'Frazionamenti Catastali'
+    desc_1 = 'Vettore poligoni' 
+    desc_2 = 'Vettore linea dividente'
+    desc_3 = 'Taglio con dividente posizionata manualmente'
+    desc_4 = 'Denominatore frazione o 1/n parte della superficie'
+    desc_5 = 'Frazionamento in parti eguali'
+    desc_6 = 'Superficie da ottenere in alternativa alla frazione'
+    desc_7 = 'Inverte ordine delle parti rispetto alla dividente Up/Dn - Sx/dx'
+    desc_8 = 'Fraz_'
+    field_1 = 'Fraz_sub'
+    field_2 = 'Fraz_part'
+    field_3 = 'Fraz_area'
+    msg_1 = "1 !! LA LINEA TOCCA MA NON INTERSECA IL POLIGONO !!"
+    msg_2 = "2 !! LA LINEA TOCCA MA NON INTERSECA IL POLIGONO !!"
+    msg_3 = "!!  LA LINEA NON INTERSECA IL POLIGONO !!"
+    msg_4 = "PARTE MAGGIORE DELL'INTERO"
+    feed_1 = ' tagli --- residuo = '
+    feed_2 = 'residuo = '
+    feed_3 = 'Taglio semplice'
+    feed_4 = 'Taglio a metà'
+    feed_5 = 'Taglio con area obiettivo'
+    feed_6 = 'Taglio 1/'
+    feed_7 = ' e '
+    feed_8 = 'Obiettivo tagli n 1/n'
+    feed_9 = 'parti '
+else:
+    Help_0 = "Divide the polygon into parts<br> The cutting orientation is defined by a line<br>\
+            Produces a new layer named 'Fraz_' followed by date and time\n\
+            <h3 style='color:blue'><strong>Parameters</h3>\
+            <ul>\
+            <li>polygonal layer containing <b>elements to split</b></li>\
+            <li>linear layer containing the <b>cutting orientation line</b></li>\
+            <li><b>fraction denominator or number of egual parts <font color='green'>[opt 2]</font></b> of target area</li>\
+            </ul>\
+            <h3 style='color:green'><strong>Options</h3>\
+            <ol>\
+            <li>cut along line positioned manually</li>\
+            <li>split into n equal parts</li>\
+            <li>surface area to be obtained (alternative to the part/s)</li>\
+            <li>reversal order of parts</li>\
+            </ol>\
+            <h4 style='color:red'>UNPREDICTABLE RESULT FOR CONCAVE POLYGONS</h4>\
+            <h4 style='color:black'>For more information:</h4>\
+            <h5 style='color:blue'><a href='https://github.com/Korto19/Cadastral_Divisions#frazionamenti-cadastral-divisions'>https://github.com/Korto19/Cadastral_Divisions#frazionamenti-cadastral-divisions</a></h5>"
+    desc_0 = 'Cadastral Divisions'
+    desc_1 = 'Input Poly layer'
+    desc_2 = 'Input Line layer'
+    desc_3 = 'Split with divider manually positioned'
+    desc_4 = 'Denominator fraction or 1/n parts of the area'
+    desc_5 = 'Splitting into equal parts'
+    desc_6 = 'Surface area to be obtained as an alternative to the fraction'
+    desc_7 = 'Invert parts respect to the divider line Up/Dn - Sx/dx'
+    desc_8 = 'Fract_'
+    field_1 = 'Fract_sub'
+    field_2 = 'Fract_part'
+    field_3 = 'Fract_area'
+    msg_1 = "1 !! LINE TOUCH BUT NOT INTERSECTS POLY !!"
+    msg_2 = "2 !! LINE TOUCH BUT NOT INTERSECTS POLY !!"
+    msg_3 = "!! LINE NOT INTERSECTS POLY !!"
+    msg_4 = "MAJOR PART OF THE WHOLE"
+    feed_1 = ' cuts --- residue = '
+    feed_2 = 'residue = '
+    feed_3 = 'Trim Direct'
+    feed_4 = 'Trim Fifty Fifty'
+    feed_5 = 'Trim Target area'
+    feed_6 = 'Trim Target 1/'
+    feed_7 = ' and '
+    feed_8 = 'Target n 1/n Trim'
+    feed_9 = 'parts ' 
+
 
 class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
     """
@@ -75,7 +169,6 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
     
     #icona dell'algoritmo di processing
     def icon(self):
-        cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
         icon = QIcon(os.path.join(os.path.join(cmd_folder, 'icon.png')))
         return icon 
         
@@ -90,14 +183,14 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
         lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return 'Cadastral Divisions'
+        return desc_0
 
     def displayName(self):
         """
         Returns the translated algorithm name, which should be used for any
         user-visible display of the algorithm name.
-        """
-        return self.tr('Cadastral Divisions')
+        """ 
+        return self.tr(desc_0)
 
     def group(self):
         """
@@ -122,18 +215,10 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
         should provide a basic description about what the algorithm does and the
         parameters and outputs associated with it..
         """
-        return self.tr(
-        "Fraziona il poligono interessato in n parti in funzione di una linea\n\
-        Produce un nuovo layer denominato 'Fraz_' seguito da data e ora\n\
-        <mark style='color:blue'><strong>PARAMETRI</strong></mark>\n\
-        - layer poligonale contenente elementi da frazionare\n\
-        - layer lineare LINESTRING contenente UNA RETTA dividente\n\
-        - n numero parti o un ennesimo da ottenere\n\
-        \n- [opz] taglio lungo linea posizionata manualmente \
-        \n- [opz] frazionamento in n parti eguali\
-        \n- [opz] superficie da ottenere in alternativa alla parte\n\
-        \n- [opz] inversione delle parti\n\
-        <mark style='color:red'><strong>NB: RISULTATO IMPREVEDIBILE PER POLIGONI CONCAVI</strong></mark>")
+        header = '''
+                    <img src="'''+ os.path.join(os.path.join(cmd_folder, 'icon.png')) + '''" width="50" height="50" style="float:right">
+        '''
+        return self.tr(header + Help_0)
     
     def initAlgorithm(self, config=None):
         """
@@ -145,7 +230,7 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterFeatureSource(
                 self.INPUTP,
-                self.tr('Input Poly layer'),
+                self.tr(desc_1),
                 [QgsProcessing.TypeVectorPolygon]
             )
         )
@@ -154,7 +239,7 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterFeatureSource(
                 self.INPUTL,
-                self.tr('Input Line layer'),
+                self.tr(desc_2),
                 [QgsProcessing.TypeVectorLine]
             )
         )
@@ -162,7 +247,7 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
         #taglio diretto
         INPUTT = QgsProcessingParameterBoolean(
             self.INPUTT,
-            self.tr('Taglio con dividente posizionata manualmente'), 0
+            self.tr(desc_3), 0
         )
         #INPUTT.setFlags(INPUTT.flags())# | QgsProcessingParameterDefinition.FlagAdvanced)
         self.addParameter(INPUTT)
@@ -171,7 +256,7 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterNumber(
                 self.INPUTA,
-                self.tr('Denominatore frazione o n parti della superficie'),
+                self.tr(desc_4),
                 QgsProcessingParameterNumber.Integer,
                 2, False, 2
             )
@@ -180,7 +265,7 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
         #Numero parti se > 2
         INPUTN = QgsProcessingParameterBoolean(
             self.INPUTN,
-            self.tr('Frazionamento in parti eguali'), 0
+            self.tr(desc_5), 0
         )
         #INPUTN.setFlags(INPUTN.flags() | QgsProcessingParameterDefinition.FlagAdvanced)
         self.addParameter(INPUTN)
@@ -189,7 +274,7 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterNumber(
                 self.INPUTS,
-                self.tr('Superficie da ottenere in alternativa alla frazione'),
+                self.tr(desc_6),
                 QgsProcessingParameterNumber.Double,
                 0, False, 0
             )
@@ -198,7 +283,7 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
         #inversione taglio se occorresse
         INPUTV = QgsProcessingParameterBoolean(
             self.INPUTV,
-            self.tr('Inverte parti rispetto alla dividente Up/Dn - Sx/dx'), 0
+            self.tr(desc_7), 0
         )
         #INPUTV.setFlags(INPUTV.flags() | QgsProcessingParameterDefinition.FlagAdvanced)
         self.addParameter(INPUTV)
@@ -208,7 +293,7 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterFeatureSink(
                 self.OUTPUT,
-                self.tr('Fraz_' + str((datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"))))
+                self.tr(desc_8 + str((datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"))))
             )
         )
 
@@ -253,15 +338,15 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
         
         
         fields = sourceP.fields()
-        fields.append(QgsField('Fraz_sub', QVariant.String))
-        fields.append(QgsField('Fraz_part', QVariant.String))      ####################
-        fields.append(QgsField('Fraz_area', QVariant.Double))
+        fields.append(QgsField(field_1, QVariant.String))
+        fields.append(QgsField(field_2, QVariant.String))
+        fields.append(QgsField(field_3, QVariant.Double))
 
         
         (sink, dest_id) = self.parameterAsSink(
             parameters,
             self.OUTPUT,
-            context, fields, QgsWkbTypes.Polygon, sourceP.sourceCrs() #QgsCoordinateReferenceSystem('EPSG:32632') )
+            context, fields, QgsWkbTypes.Polygon, sourceP.sourceCrs()
         )
         
         def extend_move_line(feat_L, feat_P):
@@ -298,7 +383,7 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
                     risultato = QgsFeature()
                     risultato.setGeometry(splits[0])
                 else:
-                    sys.exit("1 !! LINE TOUCH BUT NOT INTERSECTS POLY !!")
+                    sys.exit(msg_1)
                 
                 feat_r = feat_L.geometry()
                 feat_r.rotate(180,feat_r.centroid().asPoint())
@@ -308,10 +393,10 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
                     risultato1 = QgsFeature()
                     risultato1.setGeometry(splits[0])
                 else:
-                    sys.exit("2 !! LINE TOUCH BUT NOT INTERSECTS POLY !!")
+                    sys.exit(msg_2)
                 
             else:
-                sys.exit("!! LINE NOT INTERSECTS POLY !!")
+                sys.exit(msg_3)
             
             if risultato.geometry().area() >= risultato1.geometry().area():
                 smax = risultato
@@ -367,9 +452,9 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
 
             
             if n < iterazioni:
-                feedback.pushInfo(str(n) + ' tagli --- residuo = ' + str(round(residuo,5)) + '\n' )
+                feedback.pushInfo(str(n) + feed_1 + str(round(residuo,5)) + '\n' )
             else:
-                feedback.pushInfo('residuo = ' + str(round(residuo,5)) + '\n' )
+                feedback.pushInfo(feed_2 + str(round(residuo,5)) + '\n' )
             return
           
         
@@ -384,12 +469,12 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
                         sup_target = area_mappale - sup_target
                     parti = area_mappale / sup_target
                     area_target = sup_target
-                    feedback.pushInfo('parti ' + str(format(1/parti,'.3%')))
+                    feedback.pushInfo(feed_9 + str(format(1/parti,'.3%')))
                 else:
-                    sys.exit("PARTE MAGGIORE DELL'INTERO")
+                    sys.exit(msg_4)
             else:
                 area_target = area_mappale / parti 
-                feedback.pushInfo('parti ' + str(format(1/parti,'.3%')))
+                feedback.pushInfo(feed_9 + str(format(1/parti,'.3%')))
             
             rlist = trim_poly_by_line(feat_L, feat_P, verso)
             residuo = round((rlist[1] - area_target), int(decimali))
@@ -462,9 +547,9 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
                 n += 1
                 
             if n < iterazioni:
-                feedback.pushInfo(str(n) + ' tagli --- residuo = ' + str(round(residuo,5)) + '\n' )
+                feedback.pushInfo(str(n) + feed_1 + str(round(residuo,5)) + '\n' )
             else:
-                feedback.pushInfo('residuo = ' + str(round(residuo,5)) + '\n' )
+                feedback.pushInfo(feed_2 + str(round(residuo,5)) + '\n' )
             return rlist
         
                 
@@ -484,26 +569,26 @@ class  CadastralDivisionsAlgorithm(QgsProcessingAlgorithm):
          
         if not frazioni or ( frazioni and parti==2):
             if direct:
-                feedback.pushInfo('Trim Direct')
+                feedback.pushInfo(feed_3)
                 rlist = trim_poly_by_line(dividente, mappale, verso) 
             elif parti == 2 and sup_target == 0:
-                feedback.pushInfo('Trim Fifty Fifty')
+                feedback.pushInfo(feed_4)
                 dividente = extend_move_line(dividente, mappale)
                 bisezione(dividente, mappale, parti, decimali, val_prec, iterazioni, verso)
                 rlist = trim_poly_by_line(dividente, mappale, verso)
             elif sup_target != 0:
-                feedback.pushInfo('Trim Target area')
+                feedback.pushInfo(feed_5)
                 dividente = extend_move_line(dividente, mappale)
                 rlist = nnsezione(dividente, mappale, parti, decimali, val_prec, iterazioni, verso, sup_target)
                 rlist = trim_poly_by_line(dividente, mappale, verso)
             else:
-                feedback.pushInfo('Trim Target 1/'+ str(int(parti)) + ' and ' + str(int(parti-1)) + '/' + str(int(parti)))
+                feedback.pushInfo(feed_6 + str(int(parti)) + feed_7 + str(int(parti-1)) + '/' + str(int(parti)))
                 dividente = extend_move_line(dividente, mappale)
                 rlist = nnsezione(dividente, mappale, parti, decimali, val_prec, iterazioni, verso, sup_target)
                 rlist = trim_poly_by_line(dividente, mappale, verso)
                 
         else:
-            feedback.pushInfo('Target n 1/n Trim')
+            feedback.pushInfo(feed_8)
             while parti > 2:
                 feedback.pushInfo(str(parti))
                 dividente = extend_move_line(dividente, mappale)

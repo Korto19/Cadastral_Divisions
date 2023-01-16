@@ -38,6 +38,16 @@ import os
 import inspect
 from qgis.PyQt.QtGui import QIcon
 
+#traduzione
+from qgis.PyQt.QtCore import QSettings
+settings = QSettings()
+
+if settings.value('locale/userLocale')[0:2] == 'it':
+    desc_0 = 'Catastali'
+else:
+    desc_0 = 'Cadastral'
+
+
 class CadastralDivisionsProvider(QgsProcessingProvider):
 
     def __init__(self):
@@ -67,7 +77,7 @@ class CadastralDivisionsProvider(QgsProcessingProvider):
         string should be a unique, short, character only string, eg "qgis" or
         "gdal". This string should not be localised.
         """
-        return 'CADASTRAL'
+        return desc_0
 
     def name(self):
         """
@@ -76,7 +86,7 @@ class CadastralDivisionsProvider(QgsProcessingProvider):
 
         This string should be short (e.g. "Lastools") and localised.
         """
-        return self.tr('CADASTRAL')
+        return self.tr(desc_0)
 
         #icona del gruppo in processing
     def icon(self):
